@@ -7,8 +7,6 @@ const Products = require('./views/Products.jsx');
 // import { Product } from './views/Product.jsx';
 const Product = require('./views/Product.jsx');
 
-console.log('Product', Product)
-
 const routes = (
   <Router history={browserHistory}>
     <div>

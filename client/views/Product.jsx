@@ -1,18 +1,30 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import productActions from '../actions/productActions.js';
+import * as productActions from '../actions/productActions.js';
 
 var Product = React.createClass({
   displayName: 'Product',
   getInitialState: function() {
     return {
       product: {
-        inputValue: '',
+        name: '',
         color: ''
       },
       validClass: 'valid'
     };
+  },
+
+  componentWillMount: function() {
+    this.props.actions.fetchProducts();
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (this.props.products != nextProps.products ) {
+      if (nextProps.products && nextProps.products.product) {
+        this.setState({ product: nextProps.products.product });
+      }
+    }
   },
 
   checkValidName: function(value) {
@@ -23,14 +35,14 @@ var Product = React.createClass({
     return false;
   },
 
-  updateInputValue: function(e) {
+  updatename: function(e) {
     let validClass = 'valid'
     let isValidName = this.checkValidName(e.target.value);
     if (!isValidName) {
       validClass = 'invalid'
     }
     let newProduct = Object.assign({}, this.state.product);
-    newProduct.inputValue = e.target.value;
+    newProduct.name = e.target.value;
     this.setState({
       product: newProduct,
       validClass
@@ -48,38 +60,69 @@ var Product = React.createClass({
 
   saveProduct: function(e) {
     e.preventDefault();
-    let isValidName = this.checkValidName(this.state.product.inputValue);
-    console.log(isValidName, this.state.product.inputValue)
+    let isValidName = this.checkValidName(this.state.product.name);
     if (!isValidName) {
       alert('Please set right name');
+    } else {
+      if (this.state.product && this.state.product.id) {
+        this.props.actions.updateProduct(this.state.product);
+      } else {
+        this.props.actions.createProduct(this.state.product);
+      }
     }
-    // this.props.actions.createProduct(this.state.product);
-    console.log('VALUES', this.state.product, isValidName);
+  },
+
+  selectProduct: function(product, e) {
+    e.preventDefault();
+    this.setState({
+      product: product
+    });
   },
 
   render: function() {
     let colors = ['red', 'green', 'blue'];
+    console.log('PROPS', this.props.products);
+    console.log("State", this.state);
+    let products = (this.props.products && this.props.products.allProducts) ? this.props.products.allProducts : [];
+
     return (
       <div>
-        <form onSubmit={this.saveProduct}>
-          <label>Name:</label>
-          <input className={this.state.validClass} value={this.state.inputValue} onChange={this.updateInputValue}/>
+        <div>
+          <h2> Edit product: </h2>
+          <form onSubmit={this.saveProduct}>
+            <label>Name:</label>
+            <input className={this.state.validClass} value={this.state.product.name} onChange={this.updatename}/>
+              {
+                colors.map((color, i) =>
+                  <div className="radio" key={color}>
+                    <label>
+                    <input
+                      type='radio'
+                      value={color}
+                      checked={this.state.product.color === color}
+                      onChange={this.changeColor}/>
+                      {color}
+                    </label>
+                  </div>
+                )
+              }
+            <button type='Submit'> Save </button>
+          </form>
+        </div>
+        <div className="all-products">
+          <h2> All products: </h2>
+          <table>
             {
-              colors.map((color, i) =>
-                <div className="radio" key={color}>
-                  <label>
-                  <input
-                    type='radio'
-                    value={color}
-                    checked={this.state.product.color === color}
-                    onChange={this.changeColor}/>
-                    {color}
-                  </label>
-                </div>
+              products.map((product, i) =>
+                <tr onClick={this.selectProduct.bind(this, product)} key={i}>
+                  <td> {product.id} </td>
+                  <td> {product.name} </td>
+                  <td> {product.color} </td>
+                </tr>
               )
             }
-          <button type='Submit'> Save </button>
-        </form>
+          </table>
+        </div>
       </div>
     );
   }
@@ -98,6 +141,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 // export default connect(mapStateToProps, mapDispatchToProps)(Product)
-// module.exports = connect(mapStateToProps, mapDispatchToProps)(Product)
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Product)
 
-module.exports = Product
+// module.exports = Product

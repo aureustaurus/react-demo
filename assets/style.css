@@ -5,3 +5,16 @@
 .invalid {
   border: 2px solid red;
 }
+
+.all-products table{
+  border: 1px solid black;
+}
+
+.all-products table tr{
+  width: 300px;
+}
+
+.all-products table td{
+  border: 1px solid black;
+  width: 100px;
+}

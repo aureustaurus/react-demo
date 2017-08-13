@@ -9,28 +9,42 @@ app.get('/', function (req, res, next) {
 });
 
 app.get('/product', function (req, res) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.send('Welcome');
+  // res.header("Access-Control-Allow-Origin", "*");
+  var products = [
+    {id: 1, name: 'prod1', color: 'red'},
+    {id: 2, name: 'prod2', color: 'green'}
+  ];
+  products = JSON.stringify(products);
+  res.send(products);
 });
 
 app.get('/product/:id', function (req, res) {
+  // res.header("Access-Control-Allow-Origin", "*");
   var prodId = req.params.id;
   console.log('prodId', prodId);
+  var product = {id: 1, name: 'prod1', color: 'red'};
+  // TODO get product from DB
+  product = JSON.stringify(product);
   // var result = yield storyModel.getItemFromServiceById(itemId);
-  res.header("Access-Control-Allow-Origin", "*");
-  res.send('Welcome');
+  res.send(product);
 });
 
 app.post('/product/new', function (req, res) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.send('Create product');
+  // res.header("Access-Control-Allow-Origin", "*");
+  var product = {id: 1, name: 'prod1', color: 'red'};
+  // TODO get product from DB
+  product = JSON.stringify(product);
+  res.send(product);
 });
 
 app.put('/product/:id', function (req, res) {
+  // res.header("Access-Control-Allow-Origin", "*");
   var prodId = req.params.id;
   console.log('prodId', prodId);
-  res.header("Access-Control-Allow-Origin", "*");
-  res.send('Edit product');
+  var product = {id: 1, name: 'prod1', color: 'red'};
+  // TODO get product from DB
+  product = JSON.stringify(product);
+  res.send(product);
 });
 
 app.listen(config.app.port, function () {

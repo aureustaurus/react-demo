@@ -16,27 +16,23 @@ export default function productsApp(state = initialState, action) {
   switch (action.type) {
 
     case FETCH_PRODUCTS:
-      console.log('FETCH_PRODUCTS')
-      // TODO
-      newState = Object.assign({}, state);
+      var allProducts = action.products ? action.products : [];
+      var newState = Object.assign({}, state, {allProducts: allProducts});
       return newState;
 
     case GET_PRODUCT:
-      console.log('GET_PRODUCT')
-      // TODO
-      newState = Object.assign({}, state);
+      var product = action.product ? action.product : {};
+      var newState = Object.assign({}, state, {product: product});
       return newState;
 
     case CREATE_PRODUCT:
-      console.log('CREATE_PRODUCT')
-      // TODO
-      newState = Object.assign({}, state);
+      var product = action.product ? action.product : {};
+      var newState = Object.assign({}, state, {product: product});
       return newState;
 
     case UPDATE_PRODUCT:
-      console.log('UPDATE_PRODUCT')
-      // TODO
-      newState = Object.assign({}, state);
+      var product = action.product ? action.product : {};
+      var newState = Object.assign({}, state, {product: product});
       return newState;
 
     default:

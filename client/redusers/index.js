@@ -3,7 +3,7 @@ import productsApp from './products.js'
 
 
 const rootReducer = combineReducers({
-  productsApp: productsApp
+  products: productsApp
 });
 
 export default rootReducer;
