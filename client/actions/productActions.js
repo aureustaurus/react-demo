@@ -12,23 +12,14 @@ const API_URL = 'http://localhost:8081/';
 export function fetchProducts() {
   // TODO
   let url = API_URL + 'product';
-  // let products = [
-  //   {id: 1, name: 'prod1', color: 'red'},
-  //   {id: 2, name: 'prod2', color: 'green'}
-  // ];
-    axios.get(url)
-    .then(response => {
-      if (response.status == 200) {
-        products = response.data;
-        return {
-          type: FETCH_PRODUCTS,
-          products: products
-        }
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+  let products = [
+    {id: 1, name: 'prod1', color: 'red'},
+    {id: 2, name: 'prod2', color: 'green'}
+  ];
+  return {
+    type: FETCH_PRODUCTS,
+    products: products
+  }
 
 }
 
