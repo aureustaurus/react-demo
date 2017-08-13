@@ -10,48 +10,84 @@ import axios from 'axios';
 const API_URL = 'http://localhost:8081/';
 
 export function fetchProducts() {
-  // TODO
   let url = API_URL + 'product';
-  let products = [
-    {id: 1, name: 'prod1', color: 'red'},
-    {id: 2, name: 'prod2', color: 'green'}
-  ];
-  return {
-    type: FETCH_PRODUCTS,
-    products: products
+  return function (dispatch) {
+    axios.get(url)
+    .then(response => {
+      if (response.status == 200) {
+        var products = response.data;
+        dispatch({
+          type: FETCH_PRODUCTS,
+          products: products
+        })
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   }
 
 }
 
+
 export function getProduct(id) {
   console.log('getProduct');
-  // TODO
   let url = API_URL + "product/" + id;
-  // let product = {id: 1, name: 'prod1', color: 'red'};
-  return {
-    type: GET_PRODUCT//,
-    // product: product
+  return function (dispatch) {
+    axios.get(url)
+    .then(response => {
+      if (response.status == 200) {
+        var product = response.data;
+        dispatch({
+          type: GET_PRODUCT,
+          product: product
+        })
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   }
+
 }
 
 export function createProduct(data) {
   console.log('createProduct');
-  // TODO
   let url = API_URL + "product/new"
-  // TODO get product from DB with id
-  console.log('product', data);
-  return {
-    type: CREATE_PRODUCT,
-    product: data
+  return function (dispatch) {
+    axios.post(url, data)
+    .then(response => {
+      if (response.status == 200) {
+        var product = response.data;
+        dispatch({
+          type: CREATE_PRODUCT,
+          product: product
+        })
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   }
 }
 
 export function updateProduct(data) {
   console.log('updateProduct');
-  // TODO get product from DB after update
   let url = API_URL + "product/" + data.id;
-  return {
-    type: UPDATE_PRODUCT,
-    product: data
+  return function (dispatch) {
+    console.log('DATA', data);
+    axios.put(url, data)
+    .then(response => {
+      if (response.status == 200) {
+        var product = response.data;
+        dispatch({
+          type: UPDATE_PRODUCT,
+          product: product
+        })
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   }
 }
