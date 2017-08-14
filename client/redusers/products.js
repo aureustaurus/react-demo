@@ -26,13 +26,13 @@ export default function productsApp(state = initialState, action) {
       return newState;
 
     case CREATE_PRODUCT:
-      var product = action.product ? action.product : {};
-      var newState = Object.assign({}, state, {product: product});
+      var allProducts = action.products ? action.products : [];
+      var newState = Object.assign({}, state, {allProducts: allProducts});
       return newState;
 
     case UPDATE_PRODUCT:
-      var product = action.product ? action.product : {};
-      var newState = Object.assign({}, state, {product: product});
+      var allProducts = action.products ? action.products : [];
+      var newState = Object.assign({}, state, {allProducts: allProducts});
       return newState;
 
     default:

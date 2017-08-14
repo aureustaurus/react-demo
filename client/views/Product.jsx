@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as productActions from '../actions/productActions.js';
+import { Button } from 'react-bootstrap';
 
 var Product = React.createClass({
   displayName: 'Product',
@@ -79,17 +80,28 @@ var Product = React.createClass({
     });
   },
 
+  newProduct: function() {
+    this.setState({
+      product: {
+        name: '',
+        color: ''
+      },
+      validClass: 'valid'
+    });
+  },
+
   render: function() {
     let colors = ['red', 'green', 'blue'];
-    console.log('PROPS', this.props.products);
-    console.log("State", this.state);
     let products = (this.props.products && this.props.products.allProducts) ? this.props.products.allProducts : [];
 
     return (
-      <div>
+      <div className='main-container'>
         <div>
           <h2> Edit product: </h2>
-          <form onSubmit={this.saveProduct}>
+          <Button bsStyle="primary" bsSize="small" onClick= {this.newProduct}>
+            Create new
+          </Button>
+          <form className='edit-form' onSubmit={this.saveProduct}>
             <label>Name:</label>
             <input className={this.state.validClass} value={this.state.product.name} onChange={this.updatename}/>
               {
@@ -106,21 +118,34 @@ var Product = React.createClass({
                   </div>
                 )
               }
-            <button type='Submit'> Save </button>
+            <Button bsStyle="primary" bsSize="small" type="submit">
+              Save
+            </Button>
+            {/* <button type='Submit'> Save </button> */}
           </form>
+          {/* <button onClick= {this.newProduct}> New </button> */}
         </div>
         <div className="all-products">
           <h2> All products: </h2>
           <table>
-            {
-              products.map((product, i) =>
-                <tr onClick={this.selectProduct.bind(this, product)} key={i}>
-                  <td> {product.id} </td>
-                  <td> {product.name} </td>
-                  <td> {product.color} </td>
-                </tr>
-              )
-            }
+            <thead>
+              <tr>
+                <td> ID </td>
+                <td> Name </td>
+                <td> Color </td>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                products.map((product, i) =>
+                  <tr onClick={this.selectProduct.bind(this, product)} key={i}>
+                    <td> {product.id} </td>
+                    <td> {product.name} </td>
+                    <td> {product.color} </td>
+                  </tr>
+                )
+              }
+            </tbody>
           </table>
         </div>
       </div>

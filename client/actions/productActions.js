@@ -58,10 +58,10 @@ export function createProduct(data) {
     axios.post(url, data)
     .then(response => {
       if (response.status == 200) {
-        var product = response.data;
+        var products = response.data;
         dispatch({
           type: CREATE_PRODUCT,
-          product: product
+          products: products
         })
       }
     })
@@ -75,14 +75,13 @@ export function updateProduct(data) {
   console.log('updateProduct');
   let url = API_URL + "product/" + data.id;
   return function (dispatch) {
-    console.log('DATA', data);
     axios.put(url, data)
     .then(response => {
       if (response.status == 200) {
-        var product = response.data;
+        var products = response.data;
         dispatch({
           type: UPDATE_PRODUCT,
-          product: product
+          products: products
         })
       }
     })

@@ -8,6 +8,9 @@ var baseConfig = {
     port: 8081,
     root: path.normalize(__dirname + '/../..'),
     env: process.env.NODE_ENV
+  },
+  mongo: {
+    url: 'mongodb://localhost:27017/test'
   }
 }
 

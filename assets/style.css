@@ -1,3 +1,11 @@
+.main-container {
+  margin: 20px;
+}
+
+.edit-form {
+  margin: 20px;
+}
+
 .valid {
   border: 1px solid green;
 }
@@ -17,4 +25,8 @@
 .all-products table td{
   border: 1px solid black;
   width: 100px;
+}
+
+td {
+  padding: 5px;
 }

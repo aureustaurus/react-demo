@@ -1,15 +1,10 @@
 var express = require('express');
 var app = express();
 var wrap = require('co-express');
+var bodyParser = require('body-parser');
 var _ = require('lodash');
 var config = require('./config/config');
-
-var products = [
-  {id: 1, name: 'prod1', color: 'red'},
-  {id: 2, name: 'prod2', color: 'green'},
-  {id: 3, name: 'prod3', color: 'blue'},
-  {id: 4, name: 'prod4', color: 'blue'}
-];
+var db = require('./config/mongo');
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -18,41 +13,49 @@ app.use(function(req, res, next) {
   next();
 });
 
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
 app.get('/', function (req, res, next) {
   res.send('Welcome');
 });
 
-app.get('/product', function (req, res) {
-  res.header("Access-Control-Allow-Origin", "*");
-  products = JSON.stringify(products);
+app.get('/product', wrap(function*(req, res) {
+  yield db.connect();
+  var products = yield db.products.find({}).toArray();
   res.send(products);
-});
+}));
 
-app.get('/product/:id', function (req, res) {
-  var prodId = req.params.id;
-  console.log('prodId', prodId);
-  var product = {id: 1, name: 'prod1', color: 'red'};
-  // TODO get product from DB
-  product = JSON.stringify(product);
-  // var result = yield storyModel.getItemFromServiceById(itemId);
+app.get('/product/:id', wrap(function*(req, res) {
+  yield db.connect();
+  var prodId = parseInt(req.params.id);
+  var product = yield db.products.findOne({'id': prodId});
   res.send(product);
-});
+}));
 
-app.post('/product/new', function (req, res) {
-  var product = {id: 1, name: 'prod1', color: 'red'};
-  // TODO get product from DB
-  product = JSON.stringify(product);
-  res.send(product);
-});
+app.post('/product/new', wrap(function*(req, res) {
+  yield db.connect();
+  var products = [];
+  var product = req.body ? req.body : {};
 
-app.put('/product/:id', function (req, res) {
-  var prodId = req.params.id;
-  console.log('prodId', prodId);
-  var product = {id: 1, name: 'prod1', color: 'red'};
-  // TODO get product from DB
-  product = JSON.stringify(product);
-  res.send(product);
-});
+  var lastProduct = yield db.products.find({}).sort({'id':-1}).limit(1).toArray();
+  product.id = (lastProduct && lastProduct[0] && lastProduct[0].id) ? (lastProduct[0].id + 1) : 1;
+
+  yield db.products.insert(product);
+  products = yield db.products.find({}).toArray();
+  res.send(products);
+}));
+
+app.put('/product/:id', wrap(function*(req, res) {
+  yield db.connect();
+  var products = [];
+  var prodId = parseInt(req.params.id);
+  var product = req.body ? req.body : {};
+
+  yield db.products.update({id: prodId}, {"$set": {'name': product.name, 'color': product.color}});
+  products = yield db.products.find({}).toArray();
+  res.send(products);
+}));
 
 app.listen(config.app.port, function () {
   console.log('Server listening on port 8081');
